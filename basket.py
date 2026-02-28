@@ -544,8 +544,9 @@ def check_stop_loss():
     side = pos["side"]
     current_bid = markets[sym]["up_bid"] if side == "UP" else markets[sym]["dn_bid"]
     if current_bid <= STOP_LOSS_PRICE and current_bid > 0:
-        pnl = round(pos["shares"] * current_bid - ENTRY_USD, 6)
-        bt["capital"]   += ENTRY_USD + pnl
+        pnl = round(pos["shares"] * current_bid - pos["entry_usd"], 6)
+        bt["capital"]   += pos["entry_usd"] + pnl
+        bt["total_pnl"] += pnl
         bt["losses"]    += 1
         update_drawdown()
         log_event(f"STOP LOSS {side} {sym} @ bid={current_bid:.4f} | PnL=${pnl:+.4f}")
@@ -558,14 +559,14 @@ def _apply_resolution(pos, resolved):
     sym  = pos["asset"]
     side = pos["side"]
     if resolved == side:
-        pnl     = round((pos["shares"] - 1) * ENTRY_USD, 6)
+        pnl     = round(pos["shares"] - pos["entry_usd"], 6)  # shares resuelven a $1 c/u
         outcome = "WIN"
         bt["wins"] += 1
     else:
-        pnl     = -ENTRY_USD
+        pnl     = -pos["entry_usd"]
         outcome = "LOSS"
         bt["losses"] += 1
-    bt["capital"]   += ENTRY_USD + pnl
+    bt["capital"]   += pos["entry_usd"] + pnl
     bt["total_pnl"] += pnl
     update_drawdown()
     log_event(
@@ -600,8 +601,8 @@ def check_resolution():
 
         if resolved == "_UNKNOWN":
             log_event(f"FALLBACK {sym}: resolución imposible — LOSS conservador")
-            pnl = -ENTRY_USD
-            bt["capital"]   += ENTRY_USD + pnl
+            pnl = -pos["entry_usd"]
+            bt["capital"]   += pos["entry_usd"] + pnl
             bt["total_pnl"] += pnl
             bt["losses"]    += 1
             update_drawdown()
