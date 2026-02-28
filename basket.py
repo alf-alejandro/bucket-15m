@@ -78,9 +78,9 @@ STOP_LOSS_PRICE      = 0.33
 # Cuántas muestras CLOB guardar por símbolo para el fallback
 MID_HISTORY_SIZE     = 3
 
-LOG_FILE   = os.environ.get("LOG_FILE",   "/data/basket_log.json")
-CSV_FILE   = os.environ.get("CSV_FILE",   "/data/basket_trades.csv")
-STATE_FILE = os.environ.get("STATE_FILE", "/data/state.json")
+LOG_FILE   = os.environ.get("LOG_FILE",   "/tmp/basket_log.json")
+CSV_FILE   = os.environ.get("CSV_FILE",   "/tmp/basket_trades.csv")
+STATE_FILE = os.environ.get("STATE_FILE", "/tmp/state.json")
 
 # ═══════════════════════════════════════════════════════
 #  ESTADO DE LOS 3 MERCADOS

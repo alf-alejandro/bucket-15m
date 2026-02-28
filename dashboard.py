@@ -13,8 +13,8 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-STATE_FILE = os.environ.get("STATE_FILE", "/data/state.json")
-CSV_FILE   = os.environ.get("CSV_FILE",   "/data/basket_trades.csv")
+STATE_FILE = os.environ.get("STATE_FILE", "/tmp/state.json")
+CSV_FILE   = os.environ.get("CSV_FILE",   "/tmp/basket_trades.csv")
 
 def read_state() -> dict:
     try:
