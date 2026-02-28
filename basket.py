@@ -57,10 +57,10 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 POLL_INTERVAL        = 0.5
 DIVERGENCE_THRESHOLD = 0.05
 DIVERGENCE_MAX       = 0.14
-WAKE_UP_SECS         = 90
-ENTRY_WINDOW_SECS    = 85
-ENTRY_OPEN_SECS      = 60
-ENTRY_CLOSE_SECS     = 30
+WAKE_UP_SECS         = 185    # despierta 5s antes del minuto 3
+ENTRY_WINDOW_SECS    = 180    # ventana abre en minuto 3 (180s restantes)
+ENTRY_OPEN_SECS      = 0      # sin piso mínimo
+ENTRY_CLOSE_SECS     = 0      # cierra al llegar a 0s
 
 CAPITAL_TOTAL        = 100.0
 ENTRY_PCT            = 0.02          # 2% del capital por entrada
@@ -731,7 +731,7 @@ def _save_log():
 async def main_loop():
     log_event("basket.py iniciado — SIMULACION BINARIA v5 15m (sin Gamma)")
     log_event(f"Capital: ${CAPITAL_TOTAL:.0f} | Entrada: ${ENTRY_USD:.2f} ({ENTRY_PCT*100:.0f}%)")
-    log_event(f"div>={DIVERGENCE_THRESHOLD:.0%} ≤{DIVERGENCE_MAX:.0%} | Ventana {ENTRY_OPEN_SECS}s–{ENTRY_WINDOW_SECS}s (zona dorada)")
+    log_event(f"div>={DIVERGENCE_THRESHOLD:.0%} ≤{DIVERGENCE_MAX:.0%} | Ventana 0s–{ENTRY_WINDOW_SECS}s (últimos 3 min)")
 
     restore_state_from_csv()
 
@@ -824,7 +824,7 @@ if __name__ == "__main__":
     log.info("=" * 54)
     log.info("  BUCKET-15M — DIVERGENCIA ARMONICA  [BINARIO]  v5")
     log.info(f"  Capital: ${CAPITAL_TOTAL:.0f}  |  Entrada: ${ENTRY_USD:.2f} ({ENTRY_PCT*100:.0f}%)")
-    log.info(f"  Gap: {DIVERGENCE_THRESHOLD*100:.0f}pts — {DIVERGENCE_MAX*100:.0f}pts  |  Ventana: {ENTRY_OPEN_SECS}s — {ENTRY_WINDOW_SECS}s")
+    log.info(f"  Gap: {DIVERGENCE_THRESHOLD*100:.0f}pts — {DIVERGENCE_MAX*100:.0f}pts  |  Ventana: 0s — {ENTRY_WINDOW_SECS}s (últimos 3 min)")
     log.info("  SIMULACION — SIN DINERO REAL")
     log.info("=" * 54)
     log.info(f"State -> {STATE_FILE} | Log -> {LOG_FILE}")
